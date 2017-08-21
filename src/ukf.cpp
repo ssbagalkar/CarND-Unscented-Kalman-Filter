@@ -64,16 +64,6 @@ UKF::UKF() {
   //initialize weights
   weights_ = VectorXd(2 * n_aug_ + 1);
 
-  //initialize state vector x_ with values from assignment
-  x_ << 5.7441,
-	  1.3800,
-	  2.2049,
-	  0.5015,
-	  0.3528;
-
-  P_ = MatrixXd(n_x_, n_x_);
-  P_ = P_.Identity(n_x_, n_x_);
-
 
 }
 
@@ -90,6 +80,32 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
+
+	if (!is_initialized_)
+	{
+		//initialize state vector x and state covariance matrix P
+
+		//initialize state vector x_ with values from assignment
+		x_ << 5.7441,
+			1.3800,
+			2.2049,
+			0.5015,
+			0.3528;
+
+		//initialize state covariance matrix as identity
+		P_ = MatrixXd(n_x_, n_x_);
+		P_ = P_.Identity(n_x_, n_x_);
+
+		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
+		{
+			
+		}
+
+		else if (meas_package.sensor_type_ == MeasurementPackage::LASER)
+		{
+
+		}
+	}
 }
 
 /**
