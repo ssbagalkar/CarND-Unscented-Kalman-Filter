@@ -83,14 +83,6 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 	if (!is_initialized_)
 	{
-		//initialize state vector x and state covariance matrix P
-
-		//initialize state vector x_ with values from assignment
-		x_ << 5.7441,
-			1.3800,
-			2.2049,
-			0.5015,
-			0.3528;
 
 		//initialize state covariance matrix as identity
 		P_ = MatrixXd(n_x_, n_x_);
@@ -98,7 +90,20 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
 		{
-			
+			//initialize state vector x_ with 
+			//Convert from polar to cartesian coordinates
+			double rho = meas_package.raw_measurements_[0];
+			double phi = meas_package.raw_measurements_[1];
+
+			double px = rho * cos(phi);
+			double py = rho * sin(phi);
+
+
+			x_ << px,
+				py,
+				2.2049,
+				0.5015,
+				0.3528;
 		}
 
 		else if (meas_package.sensor_type_ == MeasurementPackage::LASER)
