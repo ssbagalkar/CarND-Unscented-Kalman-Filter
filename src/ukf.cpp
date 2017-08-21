@@ -51,6 +51,16 @@ UKF::UKF() {
 
   Hint: one or more values initialized above might be wildly off...
   */
+
+  // initialize state dimension
+  n_x_ = 5;
+
+  //initialize the augmented state
+  n_aug_ = 7;
+
+  //predicted sigma points matrix
+  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
+
 }
 
 UKF::~UKF() {}
