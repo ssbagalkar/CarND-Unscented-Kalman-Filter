@@ -61,6 +61,20 @@ UKF::UKF() {
   //predicted sigma points matrix
   Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
 
+  //initialize weights
+  weights_ = VectorXd(2 * n_aug_ + 1);
+
+  //initialize state vector x_ with values from assignment
+  x_ << 5.7441,
+	  1.3800,
+	  2.2049,
+	  0.5015,
+	  0.3528;
+
+  P_ = MatrixXd(n_x_, n_x_);
+  P_ = P_.Identity(n_x_, n_x_);
+
+
 }
 
 UKF::~UKF() {}
