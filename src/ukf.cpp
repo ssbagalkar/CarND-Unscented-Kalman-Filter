@@ -176,7 +176,7 @@ void UKF::Prediction(double delta_t){
 
 	///* Let's predict the sigma points
 	//predict sigma points
-	for (int i = 0; i < 2 * n_aug_ + 1; i++)
+	for (int i = 0; i < 2 * n_aug_ + 1; ++i)
 	{
 		//extract values for better readability
 		double p_x = Xsig_aug_(0, i);
@@ -191,6 +191,7 @@ void UKF::Prediction(double delta_t){
 		double px_p, py_p;
 
 		//avoid division by zero
+		//These are equations given in L7.20
 		if (fabs(yawd) > 0.001) {
 			px_p = p_x + v / yawd * (sin(yaw + yawd*delta_t) - sin(yaw));
 			py_p = p_y + v / yawd * (cos(yaw) - cos(yaw + yawd*delta_t));
@@ -204,7 +205,7 @@ void UKF::Prediction(double delta_t){
 		double yaw_p = yaw + yawd*delta_t;
 		double yawd_p = yawd;
 
-		//add noise
+		//add noise.Equations given in Lesson7.20
 		px_p = px_p + 0.5*nu_a*delta_t*delta_t * cos(yaw);
 		py_p = py_p + 0.5*nu_a*delta_t*delta_t * sin(yaw);
 		v_p = v_p + nu_a*delta_t;
@@ -212,7 +213,7 @@ void UKF::Prediction(double delta_t){
 		yaw_p = yaw_p + 0.5*nu_yawdd*delta_t*delta_t;
 		yawd_p = yawd_p + nu_yawdd*delta_t;
 
-		//write predicted sigma point into right column
+		//write predicted sigma point into right column.We will have 5 * 15 matrix Xsig_pred
 		Xsig_pred_(0, i) = px_p;
 		Xsig_pred_(1, i) = py_p;
 		Xsig_pred_(2, i) = v_p;
