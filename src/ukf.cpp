@@ -90,7 +90,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
 		{
-			//initialize state vector x_ with 
+			//initialize state vector x_ for radar
 			//Convert from polar to cartesian coordinates
 			double rho = meas_package.raw_measurements_[0];
 			double phi = meas_package.raw_measurements_[1];
@@ -108,8 +108,13 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 		else if (meas_package.sensor_type_ == MeasurementPackage::LASER)
 		{
-
+			//initialize state vector x for laser
+			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 2.2049, 0.5015, 0.3528;
 		}
+		time_us_ = meas_package.timestamp_;
+		is_initialized_ = true;
+		//done initializing.No need to predict or update
+		return;
 	}
 }
 
