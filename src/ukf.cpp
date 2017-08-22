@@ -220,7 +220,7 @@ void UKF::Prediction(double delta_t){
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
 
-
+	}
 		///* Let's start prediction of mean and covariance matrix
 		//set the weights according to equation in L7.23
 		weights_(0) = lambda_ / (lambda_ + n_x_);
@@ -228,7 +228,24 @@ void UKF::Prediction(double delta_t){
 		{
 			weights_(ii) = 0.5/(lambda_ + n_aug_);
 		}
-	}
+
+		//predicted state mean
+		x_.fill(0.0);
+		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+			x_ = x_ + weights_(i) * Xsig_pred_.col(i);
+		}
+		//predicted state covariance matrix
+		P_.fill(0.0);
+		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+
+												   // state difference
+			VectorXd x_diff = Xsig_pred_.col(i) - x_;
+			//angle normalization
+			while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
+			while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
+
+			P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
+		}
 }
 
 /**
