@@ -64,6 +64,16 @@ UKF::UKF() {
   //initialize weights
   weights_ = VectorXd(2 * n_aug_ + 1);
 
+  /// Initialize all variable associated with Generation of Sigma Points
+  //initialize augmented sigma matrix
+  MatrixXd Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_ + 1);
+
+  //initialize augmented mean vector
+  VectorXd x_aug_ = VectorXd(n_aug_);
+
+  //initialize augmented state covariance
+  MatrixXd P_aug_ = MatrixXd(n_aug_, n_aug_);
+
 
 }
 
@@ -130,6 +140,11 @@ void UKF::Prediction(double delta_t) {
   Complete this function! Estimate the object's location. Modify the state
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
+
+	//Let's start with generating the sigma points
+
+	
+
 }
 
 /**
