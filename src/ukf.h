@@ -67,6 +67,18 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+  ///* Initialize all variable associated with Generation of Sigma Points
+  //initialize augmented sigma matrix
+  MatrixXd Xsig_aug_;
+
+  //initialize augmented mean vector
+  VectorXd x_aug_;
+
+  //initialize augmented state covariance
+  MatrixXd P_aug_;
+
+
+
 
   /**
    * Constructor
