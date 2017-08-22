@@ -68,13 +68,13 @@ public:
   double lambda_;
 
   ///* Initialize all variable associated with Generation of Sigma Points
-  //initialize augmented sigma matrix
+  //declare augmented sigma matrix
   MatrixXd Xsig_aug_;
 
-  //initialize augmented mean vector
+  //declare augmented mean vector
   VectorXd x_aug_;
 
-  //initialize augmented state covariance
+  //declare augmented state covariance
   MatrixXd P_aug_;
 
 

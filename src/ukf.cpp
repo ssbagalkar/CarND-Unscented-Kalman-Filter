@@ -64,7 +64,16 @@ UKF::UKF() {
   //initialize weights
   weights_ = VectorXd(2 * n_aug_ + 1);
 
-  
+  ///* initialize all variable associated with sigma generation using augmentation
+  //initialize augmented sigma matrix
+  Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_ + 1);
+
+  //initialize augmented state covariance
+  P_aug_ = MatrixXd(n_aug_, n_aug_);
+
+  //initialize augmented mean vector
+  x_aug_ = VectorXd(n_aug_);
+
 }
 
 UKF::~UKF() {}
