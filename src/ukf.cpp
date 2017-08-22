@@ -140,9 +140,28 @@ void UKF::Prediction(double delta_t) {
   vector, x_. Predict sigma points, the state, and the state covariance matrix.
   */
 
-	//Let's start with generating the sigma points
+	///*Let's start with generating the sigma points
+	// create augmented state matrix
+	x_aug_.head(5) = x_;
+	x_aug_(5) = 0;
+	x_aug_(6) = 0;
 	
-	
+	//create augmented covariance matrix
+	P_aug_.fill(0.0);
+	P_aug_.topLeftCorner(5, 5) = P_;
+	P_aug_(5, 5) = std_a_ * std_a_;
+	P_aug_(6, 6) = std_yawdd_ * std_yawdd_;
+
+	//create squre root matrix for P_aug_
+	MatrixXd L = P_aug_.llt().matrixL();
+
+	//create augmented sigma points
+	Xsig_aug_.col(0) = x_aug_;
+	for (int ii = 0; ii < n_aug_; ++ii)
+	{
+		Xsig_aug_.col(ii + 1) = x_aug_ + sqrt(lambda_ + n_aug_) * L.col(ii);
+		Xsig_aug_.col(ii + 1 +n_aug_) = x_aug_ - sqrt(lambda_ + n_aug_) * L.col(ii);
+	}
 
 }
 
