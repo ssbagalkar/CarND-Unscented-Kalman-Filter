@@ -67,7 +67,7 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
-  ///* Initialize all variable associated with Generation of Sigma Points
+  ///* Declare all variable associated with Generation of Sigma Points
   //declare augmented sigma matrix
   MatrixXd Xsig_aug_;
 
@@ -77,7 +77,17 @@ public:
   //declare augmented state covariance
   MatrixXd P_aug_;
 
+  ///* Declare all variables associated with Update step
+  ///* Declare variables for Radar
+  // declare measurement dimension for radar
+  int n_z_radar_;
 
+  // declare matrix for sigma points in measurement space for radar
+  MatrixXd Zsig_radar_;
+
+  //Create matrix for sigma 
+
+  ///* Declare variables for lidar
 
 
   /**
