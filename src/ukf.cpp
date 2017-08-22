@@ -86,12 +86,12 @@ UKF::~UKF() {}
  * either radar or laser.
  */
 void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
-  /**
-  TODO:
+	/**
+	TODO:
 
-  Complete this function! Make sure you switch between lidar and radar
-  measurements.
-  */
+	Complete this function! Make sure you switch between lidar and radar
+	measurements.
+	*/
 
 	if (!is_initialized_)
 	{
@@ -128,6 +128,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		//done initializing.No need to predict or update
 		return;
 	}
+
+	//initialize delta_t
+	double delta_t = (meas_package.timestamp_ - time_us_) / 1000000;
+
+	// reinitialize timestamp time_us_
+	time_us_ = meas_package.timestamp_;
 }
 
 /**
@@ -135,7 +141,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
  * @param {double} delta_t the change in time (in seconds) between the last
  * measurement and this one.
  */
-void UKF::Prediction(double delta_t) {
+
+
+void UKF::Prediction(double delta_t)
+{
   /**
   TODO:
 
@@ -166,6 +175,9 @@ void UKF::Prediction(double delta_t) {
 		Xsig_aug_.col(ii + 1 +n_aug_) = x_aug_ - sqrt(lambda_ + n_aug_) * L.col(ii);
 	}
 
+	///* Let's predict the sigma points
+	//calculate delta time is seconds
+	 
 }
 
 /**
