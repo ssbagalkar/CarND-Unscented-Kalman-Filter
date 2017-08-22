@@ -64,7 +64,7 @@ UKF::UKF() {
   //initialize weights
   weights_ = VectorXd(2 * n_aug_ + 1);
 
-  //initialize labmda
+  //initialize lambda-spreadng function
   lambda_ = 3 - n_aug_;
 
   ///* initialize all variable associated with sigma generation using augmentation
@@ -219,6 +219,15 @@ void UKF::Prediction(double delta_t){
 		Xsig_pred_(2, i) = v_p;
 		Xsig_pred_(3, i) = yaw_p;
 		Xsig_pred_(4, i) = yawd_p;
+
+
+		///* Let's start prediction of mean and covariance matrix
+		//set the weights according to equation in L7.23
+		weights_(0) = lambda_ / (lambda_ + n_x_);
+		for (int ii = 1; ii < 2 * n_aug_ + 1; ++ii)
+		{
+			weights_(ii) = 0.5/(lambda_ + n_aug_);
+		}
 	}
 }
 
