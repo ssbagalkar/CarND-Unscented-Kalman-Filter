@@ -101,15 +101,15 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 			x_ << px,
 				py,
-				2.2049,
-				0.5015,
-				0.3528;
+				0,
+				0,
+				0;
 		}
 
 		else if (meas_package.sensor_type_ == MeasurementPackage::LASER)
 		{
 			//initialize state vector x for laser
-			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 2.2049, 0.5015, 0.3528;
+			x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 		}
 		time_us_ = meas_package.timestamp_;
 		is_initialized_ = true;
