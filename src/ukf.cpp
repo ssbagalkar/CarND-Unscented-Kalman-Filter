@@ -44,14 +44,6 @@ UKF::UKF() {
   // Radar measurement noise standard deviation radius change in m/s
   std_radrd_ = 0.3;
 
-  /**
-  TODO:
-
-  Complete the initialization. See ukf.h for other member properties.
-
-  Hint: one or more values initialized above might be wildly off...
-  */
-
   // initialize state dimension
   n_x_ = 5;
 
@@ -76,6 +68,20 @@ UKF::UKF() {
 
   //initialize augmented mean vector
   x_aug_ = VectorXd(n_aug_);
+
+  ///*initialize all variables associated with update step for radar
+  //set the measurement vector dimension
+  n_z_radar_ = 3;
+
+  // initialize matrix for sigma points in measurement space for radar
+  Zsig_radar_ = MatrixXd(n_z_radar_, 2 * n_aug_ + 1);
+
+  //add measurement noise covariance matrix
+   R_radar = MatrixXd(n_z_radar_, n_z_radar_);
+
+   //initialize measurement covariance matrix S
+	S_radar = MatrixXd(n_z_radar_, n_z_radar_);
+
 
 }
 
@@ -234,18 +240,21 @@ void UKF::Prediction(double delta_t){
 		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
 			x_ = x_ + weights_(i) * Xsig_pred_.col(i);
 		}
+
 		//predicted state covariance matrix
 		P_.fill(0.0);
 		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
 
 												   // state difference
 			VectorXd x_diff = Xsig_pred_.col(i) - x_;
+
 			//angle normalization
 			while (x_diff(3)> M_PI) x_diff(3) -= 2.*M_PI;
 			while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
 			P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
 		}
+
 }
 
 /**
@@ -276,4 +285,49 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+  //transform sigma points into measurement space
+	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
+
+											   // extract values for better readibility
+		double p_x = Xsig_pred_(0, i);
+		double p_y = Xsig_pred_(1, i);
+		double v = Xsig_pred_(2, i);
+		double yaw = Xsig_pred_(3, i);
+
+		double v1 = cos(yaw)*v;
+		double v2 = sin(yaw)*v;
+
+		// measurement model
+		Zsig_radar_(0, i) = sqrt(p_x*p_x + p_y*p_y);                        //r
+		Zsig_radar_(1, i) = atan2(p_y, p_x);                                //phi
+		Zsig_radar_(2, i) = (p_x*v1 + p_y*v2) / sqrt(p_x*p_x + p_y*p_y);   //r_dot
+	}
+
+	//mean predicted measurement
+	VectorXd z_pred = VectorXd(n_z_radar_);
+	z_pred.fill(0.0);
+	for (int i = 0; i < 2 * n_aug_ + 1; i++) {
+		z_pred = z_pred + weights_(i) * Zsig_radar_.col(i);
+	}
+
+	
+	S.fill(0.0);
+
+	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
+											   //residual
+		VectorXd z_diff = Zsig_radar_.col(i) - z_pred;
+
+		//angle normalization
+		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
+		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
+
+		S = S + weights_(i) * z_diff * z_diff.transpose();
+
+		
+		R_radar << std_radr_*std_radr_, 0, 0,
+			0, std_radphi_*std_radphi_, 0,
+			0, 0, std_radrd_*std_radrd_;
+		S = S + R_radar;
+	}
 }
+

@@ -85,9 +85,11 @@ public:
   // declare matrix for sigma points in measurement space for radar
   MatrixXd Zsig_radar_;
 
-  //Create matrix for sigma 
+  //declare measurement noise covariance matrix
+  MatrixXd R_radar;
 
   ///* Declare variables for lidar
+
 
 
   /**
