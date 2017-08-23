@@ -77,17 +77,19 @@ UKF::UKF() {
   Zsig_radar_ = MatrixXd(n_z_radar_, 2 * n_aug_ + 1);
 
   //add measurement noise covariance matrix
-	R_radar = MatrixXd(n_z_radar_, n_z_radar_);
+  R_radar = MatrixXd(n_z_radar_, n_z_radar_);
 
-   //initialize measurement covariance matrix S
-	S_radar = MatrixXd(n_z_radar_, n_z_radar_);
+  //initialize measurement covariance matrix S
+  S_radar = MatrixXd(n_z_radar_, n_z_radar_);
 
-	//initialize Kalman gain Matrix 
-	Kalman_gain_radar = MatrixXd(n_x_, n_z_radar_);
+  //initialize Kalman gain Matrix 
+  Kalman_gain_radar = MatrixXd(n_x_, n_z_radar_);
 
-	//initialize T matrix cross correlation
-	T_cross_corr_radar = MatrixXd(n_x_, n_z_radar_);
+  //initialize T matrix cross correlation
+  T_cross_corr_radar = MatrixXd(n_x_, n_z_radar_);
 
+  //create example vector for incoming radar measurement
+  z_radar_ = VectorXd(n_z_radar_);
 
 }
 

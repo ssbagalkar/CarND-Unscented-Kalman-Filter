@@ -92,10 +92,13 @@ public:
   MatrixXd S_radar;
   
   //Kalman Gain filter;
-  MatrixXd Kalman_gain;
+  MatrixXd Kalman_gain_radar;
 
   //Cross correlation matrix
-  MatrixXd T_cross_corr;
+  MatrixXd T_cross_corr_radar;
+
+  //declare vector for incoming radar measurements
+  VectorXd z_radar_;
 
   ///* Declare variables for lidar
 
