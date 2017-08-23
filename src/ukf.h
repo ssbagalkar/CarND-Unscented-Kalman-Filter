@@ -88,6 +88,15 @@ public:
   //declare measurement noise covariance matrix
   MatrixXd R_radar;
 
+  //measurement covariance matrix S
+  MatrixXd S_radar;
+  
+  //Kalman Gain filter;
+  MatrixXd Kalman_gain;
+
+  //Cross correlation matrix
+  MatrixXd T_cross_corr;
+
   ///* Declare variables for lidar
 
 

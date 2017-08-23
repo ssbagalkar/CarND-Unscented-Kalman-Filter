@@ -82,6 +82,12 @@ UKF::UKF() {
    //initialize measurement covariance matrix S
 	S_radar = MatrixXd(n_z_radar_, n_z_radar_);
 
+	//initialize Kalman gain Matrix 
+	Kalman_gain_radar = MatrixXd(n_x_, n_z_radar_);
+
+	//initialize T matrix cross correlation
+	T_cross_corr_radar = MatrixXd(n_x_, n_z_radar_);
+
 
 }
 
@@ -334,5 +340,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	}
 
 	///* start with update step to get x_ and covariance P_
+
 }
 
