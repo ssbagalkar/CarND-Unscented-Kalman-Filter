@@ -77,7 +77,7 @@ UKF::UKF() {
   Zsig_radar_ = MatrixXd(n_z_radar_, 2 * n_aug_ + 1);
 
   //add measurement noise covariance matrix
-   R_radar = MatrixXd(n_z_radar_, n_z_radar_);
+	R_radar = MatrixXd(n_z_radar_, n_z_radar_);
 
    //initialize measurement covariance matrix S
 	S_radar = MatrixXd(n_z_radar_, n_z_radar_);
@@ -285,6 +285,9 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the radar NIS.
   */
+  /* predict measurement for radar.Get measurement mean zsig_radar and
+	/predicted measurement covariance matrix S_radar
+	*/
   //transform sigma points into measurement space
 	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 
@@ -311,7 +314,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	}
 
 	
-	S.fill(0.0);
+	S_radar.fill(0.0);
 
 	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 											   //residual
@@ -321,13 +324,15 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
 		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
 
-		S = S + weights_(i) * z_diff * z_diff.transpose();
+		S_radar = S_radar + weights_(i) * z_diff * z_diff.transpose();
 
 		
 		R_radar << std_radr_*std_radr_, 0, 0,
 			0, std_radphi_*std_radphi_, 0,
 			0, 0, std_radrd_*std_radrd_;
-		S = S + R_radar;
+		S_radar =S_radar + R_radar;
 	}
+
+	///* start with update step to get x_ and covariance P_
 }
 
