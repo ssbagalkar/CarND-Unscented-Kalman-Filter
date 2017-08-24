@@ -134,6 +134,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 				0,
 				0,
 				0;
+
 		}
 
 		else if (meas_package.sensor_type_ == MeasurementPackage::LASER)
@@ -153,6 +154,25 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	// reinitialize timestamp time_us_
 	time_us_ = meas_package.timestamp_;
 
+	// start prediction step
+	Prediction(delta_t);
+
+	// start Update step for Lidar OR Radar
+	if (use_laser_)
+	{
+		if (meas_package.sensor_type_ == MeasurementPackage::LASER)
+		{
+			UpdateLidar(meas_package);
+		}
+	}
+	else if (use_radar_)
+	{
+		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
+		{
+			UpdateRadar(meas_package);
+		}
+		
+	}
 
 }
 
