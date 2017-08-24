@@ -408,10 +408,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	P_ = P_ - Kalman_gain_radar * S_radar * Kalman_gain_radar.transpose();
 
 	//calculate NIS for radar
-	double NIS_radar = z_diff.transpose() * S_radar.inverse() * z_diff;
+	 NIS_radar_ = z_diff.transpose() * S_radar.inverse() * z_diff;
 
 	//store NIS radar measurements
-	NIS_vector_radar.push_back(NIS_radar);
+	//NIS_vector_radar.push_back(NIS_radar);
 	//std::cout << "NIS vector" << NIS_radar << std::endl;
 }
 
