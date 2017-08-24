@@ -1,6 +1,7 @@
 #include "ukf.h"
 #include "Eigen/Dense"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -11,6 +12,9 @@ using std::vector;
  * Initializes Unscented Kalman filter
  */
 UKF::UKF() {
+
+  // set initialization to false
+  is_initialized_ = false;
   // if this is false, laser measurements will be ignored (except during init)
   use_laser_ = true;
 
@@ -148,6 +152,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 	// reinitialize timestamp time_us_
 	time_us_ = meas_package.timestamp_;
+
+
 }
 
 /**
@@ -380,5 +386,12 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	//update state mean and covariance matrix for radar
 	x_ = x_ + Kalman_gain_radar * z_diff;
 	P_ = P_ - Kalman_gain_radar * S_radar * Kalman_gain_radar.transpose();
+
+	//calculate NIS for radar
+	double NIS_radar = z_diff.transpose() * S_radar.inverse() * z_diff;
+
+	//store NIS radar measurements
+	NIS_vector_radar.push_back(NIS_radar);
+	//std::cout << "NIS vector" << NIS_radar << std::endl;
 }
 
