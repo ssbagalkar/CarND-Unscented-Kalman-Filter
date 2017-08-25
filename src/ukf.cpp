@@ -2,6 +2,7 @@
 #include "Eigen/Dense"
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -13,6 +14,8 @@ using std::vector;
  */
 UKF::UKF() {
 
+  //initialize timestamp
+	time_us_ = 0;
   // set initialization to false
   is_initialized_ = false;
   // if this is false, laser measurements will be ignored (except during init)
@@ -28,10 +31,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 0.2;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 0.2;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -113,7 +116,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 
 	if (!is_initialized_)
 	{
-
+		
 		//initialize state covariance matrix as identity
 		P_ = MatrixXd(n_x_, n_x_);
 		P_ = P_.Identity(n_x_, n_x_);
@@ -149,8 +152,10 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	}
 
 	//initialize delta_t
-	double delta_t = (meas_package.timestamp_ - time_us_) / 1000000;
+	double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
 
+	std::cout << "delta_t" << std::endl;
+	std::cout << delta_t<< std::endl;
 	// reinitialize timestamp time_us_
 	time_us_ = meas_package.timestamp_;
 
@@ -275,6 +280,8 @@ void UKF::Prediction(double delta_t){
 			x_ = x_ + weights_(i) * Xsig_pred_.col(i);
 		}
 
+		std::cout << "x_pred" << std::endl;
+		std::cout << x_ << std::endl;
 		//predicted state covariance matrix
 		P_.fill(0.0);
 		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
@@ -287,8 +294,10 @@ void UKF::Prediction(double delta_t){
 			while (x_diff(3)<-M_PI) x_diff(3) += 2.*M_PI;
 
 			P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
-		}
 
+		}
+		std::cout << "P_pred" << std::endl;
+		std::cout << P_ << std::endl;
 }
 
 /**
@@ -389,7 +398,11 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	}
 
 	//Kalman gain K;
-	MatrixXd K = T_cross_corr_radar * S_radar.inverse();
+	 Kalman_gain_radar = T_cross_corr_radar * S_radar.inverse();
+
+	 std::cout << "kalman" << std::endl;
+	 std::cout << Kalman_gain_radar << std::endl;
+
 
 	z_radar_ << meas_package.raw_measurements_[0],
 		meas_package.raw_measurements_[1],
@@ -408,10 +421,14 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	P_ = P_ - Kalman_gain_radar * S_radar * Kalman_gain_radar.transpose();
 
 	//calculate NIS for radar
-	 NIS_radar_ = z_diff.transpose() * S_radar.inverse() * z_diff;
+	 double NIS_radar_ = z_diff.transpose() * S_radar.inverse() * z_diff;
 
 	//store NIS radar measurements
-	//NIS_vector_radar.push_back(NIS_radar);
-	//std::cout << "NIS vector" << NIS_radar << std::endl;
+	NIS_vector_radar_.push_back(NIS_radar_);
+	//std::cout << "NIS vector" << NIS_vector_radar_ << std::endl;
+	ofstream myFile;
+	myFile.open("C:\\Users\\saurabh B\\Documents\\example.txt");
+	myFile << NIS_radar_ << std::endl;
+	myFile.close();
 }
 
