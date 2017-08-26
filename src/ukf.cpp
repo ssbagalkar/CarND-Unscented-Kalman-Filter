@@ -31,10 +31,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 0.2;
+  std_a_ = 1;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 0.2;
+  std_yawdd_ = 1;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -118,7 +118,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	{
 		
 		//initialize state covariance matrix as identity
-		P_ = MatrixXd(n_x_, n_x_);
+		
 		P_ = P_.Identity(n_x_, n_x_);
 
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
@@ -151,22 +151,25 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		return;
 	}
 
-	//initialize delta_t
-	double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
-
-	std::cout << "delta_t" << std::endl;
-	std::cout << delta_t<< std::endl;
-	// reinitialize timestamp time_us_
-	time_us_ = meas_package.timestamp_;
-
-	// start prediction step
-	Prediction(delta_t);
+	
 
 	// start Update step for Lidar OR Radar
 	if (use_laser_)
 	{
 		if (meas_package.sensor_type_ == MeasurementPackage::LASER)
 		{
+			//initialize delta_t
+			double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
+
+			std::cout << "delta_t" << std::endl;
+			std::cout << delta_t << std::endl;
+			// reinitialize timestamp time_us_
+			time_us_ = meas_package.timestamp_;
+
+			// start prediction step
+			Prediction(delta_t);
+
+			//start update step
 			UpdateLidar(meas_package);
 		}
 	}
@@ -174,6 +177,19 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	{
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
 		{
+
+			//initialize delta_t
+			double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
+
+			std::cout << "delta_t" << std::endl;
+			std::cout << delta_t << std::endl;
+			// reassign latest value of timestamp  to time_us_
+			time_us_ = meas_package.timestamp_;
+
+			// start prediction step
+			Prediction(delta_t);
+
+			//start update step
 			UpdateRadar(meas_package);
 		}
 		
@@ -208,8 +224,17 @@ void UKF::Prediction(double delta_t){
 	P_aug_(5, 5) = std_a_ * std_a_;
 	P_aug_(6, 6) = std_yawdd_ * std_yawdd_;
 
-	//create squre root matrix for P_aug_
-	MatrixXd L = P_aug_.llt().matrixL();
+	////create square root matrix for P_aug_
+	//MatrixXd L = P_aug_.llt().matrixL();
+	Eigen::LLT<MatrixXd> lltOfPaug(P_aug_);
+
+	if (lltOfPaug.info() == Eigen::NumericalIssue) {
+
+		cout << "LLT failed!" << endl;
+		throw range_error("LLT failed");
+	}
+
+	MatrixXd L = lltOfPaug.matrixL();
 
 	//create augmented sigma points
 	Xsig_aug_.col(0) = x_aug_;
@@ -273,10 +298,10 @@ void UKF::Prediction(double delta_t){
 		{
 			weights_(ii) = 0.5/(lambda_ + n_aug_);
 		}
-
+		
 		//predicted state mean
 		x_.fill(0.0);
-		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
+		for (int i = 0; i < 2 * n_aug_ + 1; ++i) {  //iterate over sigma points
 			x_ = x_ + weights_(i) * Xsig_pred_.col(i);
 		}
 
@@ -400,8 +425,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	//Kalman gain K;
 	 Kalman_gain_radar = T_cross_corr_radar * S_radar.inverse();
 
-	 std::cout << "kalman" << std::endl;
-	 std::cout << Kalman_gain_radar << std::endl;
+	 /*std::cout << "kalman" << std::endl;
+	 std::cout << Kalman_gain_radar << std::endl;*/
 
 
 	z_radar_ << meas_package.raw_measurements_[0],
@@ -420,15 +445,19 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	x_ = x_ + Kalman_gain_radar * z_diff;
 	P_ = P_ - Kalman_gain_radar * S_radar * Kalman_gain_radar.transpose();
 
+	std::cout << "x_update" << std::endl;
+	std::cout << x_ << std::endl;
+
+
 	//calculate NIS for radar
 	 double NIS_radar_ = z_diff.transpose() * S_radar.inverse() * z_diff;
 
 	//store NIS radar measurements
 	NIS_vector_radar_.push_back(NIS_radar_);
 	//std::cout << "NIS vector" << NIS_vector_radar_ << std::endl;
-	ofstream myFile;
+	/*ofstream myFile;
 	myFile.open("C:\\Users\\saurabh B\\Documents\\example.txt");
 	myFile << NIS_radar_ << std::endl;
-	myFile.close();
+	myFile.close();*/
 }
 
