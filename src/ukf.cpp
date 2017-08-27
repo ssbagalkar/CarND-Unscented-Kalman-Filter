@@ -19,10 +19,10 @@ UKF::UKF() {
   // set initialization to false
   is_initialized_ = false;
   // if this is false, laser measurements will be ignored (except during init)
-  use_laser_ = false;
+  use_laser_ = true;
 
   // if this is false, radar measurements will be ignored (except during init)
-  use_radar_ = true;
+  use_radar_ = false;
 
   // initial state vector
   x_ = VectorXd(5);
@@ -99,9 +99,10 @@ UKF::UKF() {
   z_radar_ = VectorXd(n_z_radar_);
 
   ///* initialize variables asociated with prediction step of LIDAR/Laser
-  H_ = MatrixXd(2, 4);
-  H_ << 1, 0, 0, 0,
-	  0, 1, 0, 0;
+  H_ = MatrixXd(2, 5);
+  H_ << 1, 0, 0, 0, 0,
+	  0, 1, 0, 0, 0;
+	  
 
   // measurement covariance matrix - laser
   R_ = MatrixXd(2,2);
