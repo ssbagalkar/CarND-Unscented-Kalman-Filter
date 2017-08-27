@@ -98,6 +98,16 @@ UKF::UKF() {
   //create example vector for incoming radar measurement
   z_radar_ = VectorXd(n_z_radar_);
 
+  ///* initialize variables asociated with prediction step of LIDAR/Laser
+  H_ = MatrixXd(2, 4);
+  H_ << 1, 0, 0, 0,
+	  0, 1, 0, 0;
+
+  // measurement covariance matrix - laser
+  R_ = MatrixXd(2,2);
+  R_ << std_laspx_ * std_laspx_, 0,
+	  0, std_laspy_ * std_laspy_;
+
 }
 
 UKF::~UKF() {}

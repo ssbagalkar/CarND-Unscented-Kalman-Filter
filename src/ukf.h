@@ -79,13 +79,13 @@ public:
 
   ///* Declare all variables associated with Update step
   ///* Declare variables for Radar
-  // declare measurement dimension for radar
+  //Declare measurement dimension for radar
   int n_z_radar_;
 
-  // declare matrix for sigma points in measurement space for radar
+  //Declare matrix for sigma points in measurement space for radar
   MatrixXd Zsig_radar_;
 
-  //declare measurement noise covariance matrix
+  //Declare measurement noise covariance matrix
   MatrixXd R_radar;
 
   //measurement covariance matrix S
@@ -97,14 +97,19 @@ public:
   //Cross correlation matrix
   MatrixXd T_cross_corr_radar;
 
-  //declare vector for incoming radar measurements
+  //Declare vector for incoming radar measurements
   VectorXd z_radar_;
 
-  //declare a vector to store NIS readings for radar
+  //Declare a vector to store NIS readings for radar
   std::vector<double> NIS_vector_radar_;
   //double NIS_radar_;
-  ///* Declare variables for lidar
 
+  ///* Declare variables for LIDAR
+  //Measurement matrix H for LIDAR
+  MatrixXd H_;
+
+  //Measurement covariance matrix for LIDAR
+  MatrixXd R_;
 
 
   /**
