@@ -19,10 +19,10 @@ UKF::UKF() {
   // set initialization to false
   is_initialized_ = false;
   // if this is false, laser measurements will be ignored (except during init)
-  use_laser_ = true;
+  use_laser_ = false;
 
   // if this is false, radar measurements will be ignored (except during init)
-  use_radar_ = false;
+  use_radar_ = true;
 
   // initial state vector
   x_ = VectorXd(5);
@@ -310,7 +310,7 @@ void UKF::Prediction(double delta_t){
 	}
 		///* Let's start prediction of mean and covariance matrix
 		//set the weights according to equation in L7.23
-		weights_(0) = lambda_ / (lambda_ + n_x_);
+		weights_(0) = lambda_ / (lambda_ + n_aug_);
 		for (int ii = 1; ii < 2 * n_aug_ + 1; ++ii)
 		{
 			weights_(ii) = 0.5/(lambda_ + n_aug_);
