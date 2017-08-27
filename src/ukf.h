@@ -111,6 +111,11 @@ public:
   //Measurement covariance matrix for LIDAR
   MatrixXd R_;
 
+  //declare variable for incoming lidar measurements
+  VectorXd z_laser_;
+
+  //Declare measurement dimension for radar
+  int n_z_laser_;
 
   /**
    * Constructor
