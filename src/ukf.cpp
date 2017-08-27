@@ -77,7 +77,7 @@ UKF::UKF() {
   x_aug_ = VectorXd(n_aug_);
 
   ///*initialize all variables associated with update step for radar
-  //set the measurement vector dimension
+  //set the measurement vector dimension for radar
   n_z_radar_ = 3;
 
   // initialize matrix for sigma points in measurement space for radar
@@ -107,6 +107,12 @@ UKF::UKF() {
   R_ = MatrixXd(2,2);
   R_ << std_laspx_ * std_laspx_, 0,
 	  0, std_laspy_ * std_laspy_;
+
+  //set measaurement vector dimension for laser
+  n_z_laser_ = 2;
+
+  // initialize variable for incoming lidar measurements
+  z_laser_ = VectorXd(n_z_laser_);
 
 }
 
@@ -348,6 +354,26 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
   You'll also need to calculate the lidar NIS.
   */
+
+	// store the incoming laser mesaurements
+	z_laser_ << meas_package.raw_measurements_[0],
+		meas_package.raw_measurements_[1];
+		
+	//start the update process
+	VectorXd z_pred = H_ * x_;
+	VectorXd y = z_laser_ - z_pred;
+	MatrixXd Ht = H_.transpose();
+	MatrixXd S = (H_ * P_ * Ht) + R_;
+	MatrixXd Si = S.inverse();
+	MatrixXd K = P_ * Ht * Si;
+
+	// new estimate
+	x_ = x_ + (K * y);
+	long x_size = x_.size();
+	MatrixXd I = MatrixXd::Identity(x_size, x_size);
+	P_ = (I - K * H_) * P_;
+
+	//calculate NIS for laser
 }
 
 /**
