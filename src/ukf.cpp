@@ -16,10 +16,12 @@ UKF::UKF() {
 
   //initialize timestamp
 	time_us_ = 0;
+
   // set initialization to false
   is_initialized_ = false;
+
   // if this is false, laser measurements will be ignored (except during init)
-  use_laser_ = false;
+  use_laser_ = true;
 
   // if this is false, radar measurements will be ignored (except during init)
   use_radar_ = true;
