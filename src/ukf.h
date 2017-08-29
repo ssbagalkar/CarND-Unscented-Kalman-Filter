@@ -35,37 +35,37 @@ public:
   long long time_us_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
-  double std_a_;
+  const double std_a_;
 
   ///* Process noise standard deviation yaw acceleration in rad/s^2
-  double std_yawdd_;
+  const double std_yawdd_;
 
   ///* Laser measurement noise standard deviation position1 in m
-  double std_laspx_;
+  const double std_laspx_;
 
   ///* Laser measurement noise standard deviation position2 in m
-  double std_laspy_;
+  const double std_laspy_;
 
   ///* Radar measurement noise standard deviation radius in m
-  double std_radr_;
+  const double std_radr_;
 
   ///* Radar measurement noise standard deviation angle in rad
-  double std_radphi_;
+  const double std_radphi_;
 
   ///* Radar measurement noise standard deviation radius change in m/s
-  double std_radrd_ ;
+  const double std_radrd_ ;
 
   ///* Weights of sigma points
   VectorXd weights_;
 
   ///* State dimension
-  int n_x_;
+  const int n_x_;
 
   ///* Augmented state dimension
-  int n_aug_;
+  const int n_aug_;
 
   ///* Sigma point spreading parameter
-  double lambda_;
+  const double lambda_;
 
   ///* Declare all variable associated with Generation of Sigma Points
   //declare augmented sigma matrix
@@ -80,7 +80,7 @@ public:
   ///* Declare all variables associated with Update step
   ///* Declare variables for Radar
   //Declare measurement dimension for radar
-  int n_z_radar_;
+  const int n_z_radar_;
 
   //Declare matrix for sigma points in measurement space for radar
   MatrixXd Zsig_radar_;
@@ -115,7 +115,7 @@ public:
   VectorXd z_laser_;
 
   //Declare measurement dimension for radar
-  int n_z_laser_;
+  const int n_z_laser_;
 
   /**
    * Constructor
