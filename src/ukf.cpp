@@ -33,10 +33,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 1;
+  std_a_ = 0.5;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 1;
+  std_yawdd_ = 0.9;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -192,7 +192,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			UpdateLidar(meas_package);
 		}
 	}
-	else if (use_radar_)
+	if (use_radar_)
 	{
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
 		{
@@ -493,10 +493,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 	//store NIS radar measurements
 	NIS_vector_radar_.push_back(NIS_radar_);
-	//std::cout << "NIS vector" << NIS_vector_radar_ << std::endl;
-	/*ofstream myFile;
-	myFile.open("C:\\Users\\saurabh B\\Documents\\example.txt");
-	myFile << NIS_radar_ << std::endl;
-	myFile.close();*/
+	//cout << "NIS vector" << NIS_radar_ << endl;
+	//ofstream myFile;
+	/*std::ofstream example("C:\\Users\\saurabh B\\Documents\\example.txt", std::ios_base::app | std::ios_base::out);
+	example << NIS_radar_ << std::endl;*/
+	//myFile.close();
 }
 
