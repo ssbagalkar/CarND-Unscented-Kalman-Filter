@@ -377,6 +377,19 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	P_ = (I - K * H_) * P_;
 
 	//calculate NIS for laser
+	//residual
+	VectorXd z_diff_laser = z_laser_ - z_pred;
+
+	//calculate NIS for laser
+	double NIS_laser_ = z_diff_laser.transpose() * Si * z_diff_laser;
+
+	//store NIS radar measurements
+	NIS_vector_laser_.push_back(NIS_laser_);
+
+	std::ofstream myLaserFile("C:\\Users\\saurabh B\\Documents\\Laser.txt", std::ios_base::out | std::ios_base::app | std::ios::binary);
+	myLaserFile << NIS_laser_ << std::endl;
+	myLaserFile.close();
+
 }
 
 /**
@@ -494,8 +507,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	//store NIS radar measurements
 	NIS_vector_radar_.push_back(NIS_radar_);
 
-	std::ofstream myFile("C:\\Users\\saurabh B\\Documents\\example.txt", std::ios_base::out | std::ios_base::app |std::ios::binary);
-	myFile << NIS_radar_ << std::endl;
-	myFile.close();
+	std::ofstream myRadarFile("C:\\Users\\saurabh B\\Documents\\Radar.txt", std::ios_base::out | std::ios_base::app |std::ios::binary);
+	myRadarFile << NIS_radar_ << std::endl;
+	myRadarFile.close();
 }
 
