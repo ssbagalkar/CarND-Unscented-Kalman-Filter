@@ -117,6 +117,9 @@ public:
   //Declare measurement dimension for radar
   int n_z_laser_;
 
+  //Declare a vector to store NIS readings for radar
+  std::vector<double> NIS_vector_laser_;
+
   /**
    * Constructor
    */
