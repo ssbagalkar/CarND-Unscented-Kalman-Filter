@@ -493,10 +493,9 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 	//store NIS radar measurements
 	NIS_vector_radar_.push_back(NIS_radar_);
-	//cout << "NIS vector" << NIS_radar_ << endl;
-	//ofstream myFile;
-	/*std::ofstream example("C:\\Users\\saurabh B\\Documents\\example.txt", std::ios_base::app | std::ios_base::out);
-	example << NIS_radar_ << std::endl;*/
-	//myFile.close();
+
+	std::ofstream myFile("C:\\Users\\saurabh B\\Documents\\example.txt", std::ios_base::out | std::ios_base::app |std::ios::binary);
+	myFile << NIS_radar_ << std::endl;
+	myFile.close();
 }
 
