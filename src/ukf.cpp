@@ -180,8 +180,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			//initialize delta_t
 			double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
 
-			std::cout << "delta_t" << std::endl;
-			std::cout << delta_t << std::endl;
+			/*std::cout << "delta_t" << std::endl;
+			std::cout << delta_t << std::endl;*/
 			// reinitialize timestamp time_us_
 			time_us_ = meas_package.timestamp_;
 
