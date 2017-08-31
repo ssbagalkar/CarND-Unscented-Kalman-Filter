@@ -138,8 +138,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 		
 		//initialize state covariance matrix as identity
 		
-		//P_ = P_.Identity(n_x_, n_x_);
-		//P_ << 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 3;
+		P_ = P_.Identity(n_x_, n_x_);
 
 		if (meas_package.sensor_type_ == MeasurementPackage::RADAR)
 		{
@@ -385,7 +384,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	double NIS_laser_ = z_diff_laser.transpose() * Si * z_diff_laser;
 
 	//store NIS radar measurements
-	NIS_vector_laser_.push_back(NIS_laser_);
+	//NIS_vector_laser_.push_back(NIS_laser_);
 
 	std::ofstream myLaserFile("C:\\Users\\saurabh B\\Documents\\Laser.txt", std::ios_base::out | std::ios_base::app | std::ios::binary);
 	myLaserFile << NIS_laser_ << std::endl;
@@ -442,17 +441,18 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 		VectorXd z_diff = Zsig_radar_.col(i) - z_pred_radar;
 
 		//angle normalization
-		while (z_diff(1)> M_PI) z_diff(1) -= 2.*M_PI;
-		while (z_diff(1)<-M_PI) z_diff(1) += 2.*M_PI;
+		while (z_diff(1) > M_PI) z_diff(1) -= 2.*M_PI;
+		while (z_diff(1) < -M_PI) z_diff(1) += 2.*M_PI;
 
 		S_radar = S_radar + weights_(i) * z_diff * z_diff.transpose();
 
-		
+	}
+
 		R_radar << std_radr_*std_radr_, 0, 0,
 			0, std_radphi_*std_radphi_, 0,
 			0, 0, std_radrd_*std_radrd_;
 		S_radar =S_radar + R_radar;
-	}
+	
 
 	///* start with update step to get x_ and covariance P_
 	//calculate cross correlation matrix
