@@ -200,8 +200,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 			//initialize delta_t
 			double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
 
-			std::cout << "delta_t" << std::endl;
-			std::cout << delta_t << std::endl;
+			/*std::cout << "delta_t" << std::endl;
+			std::cout << delta_t << std::endl;*/
 			// reassign latest value of timestamp  to time_us_
 			time_us_ = meas_package.timestamp_;
 
@@ -324,8 +324,8 @@ void UKF::Prediction(double delta_t){
 			x_ = x_ + weights_(i) * Xsig_pred_.col(i);
 		}
 
-		std::cout << "x_pred" << std::endl;
-		std::cout << x_ << std::endl;
+		/*std::cout << "x_pred" << std::endl;
+		std::cout << x_ << std::endl;*/
 		//predicted state covariance matrix
 		P_.fill(0.0);
 		for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
@@ -340,8 +340,8 @@ void UKF::Prediction(double delta_t){
 			P_ = P_ + weights_(i) * x_diff * x_diff.transpose();
 
 		}
-		std::cout << "P_pred" << std::endl;
-		std::cout << P_ << std::endl;
+		/*std::cout << "P_pred" << std::endl;
+		std::cout << P_ << std::endl;*/
 }
 
 /**
@@ -386,9 +386,9 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 	//store NIS radar measurements
 	//NIS_vector_laser_.push_back(NIS_laser_);
 
-	std::ofstream myLaserFile("C:\\Users\\saurabh B\\Documents\\Laser.txt", std::ios_base::out | std::ios_base::app | std::ios::binary);
+	/*std::ofstream myLaserFile("C:\\Users\\saurabh B\\Documents\\Laser.txt", std::ios_base::out | std::ios_base::app | std::ios::binary);
 	myLaserFile << NIS_laser_ << std::endl;
-	myLaserFile.close();
+	myLaserFile.close();*/
 
 }
 
@@ -499,15 +499,15 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 	x_ = x_ + Kalman_gain_radar * z_diff;
 	P_ = P_ - Kalman_gain_radar * S_radar * Kalman_gain_radar.transpose();
 
-	std::cout << "x_update" << std::endl;
-	std::cout << x_ << std::endl;
+	/*std::cout << "x_update" << std::endl;
+	std::cout << x_ << std::endl;*/
 
 
 	//calculate NIS for radar
 	 double NIS_radar_ = z_diff.transpose() * S_radar.inverse() * z_diff;
 
-	std::ofstream myRadarFile("C:\\Users\\saurabh B\\Documents\\Radar.txt", std::ios_base::out | std::ios_base::app |std::ios::binary);
+	/*std::ofstream myRadarFile("C:\\Users\\saurabh B\\Documents\\Radar.txt", std::ios_base::out | std::ios_base::app |std::ios::binary);
 	myRadarFile << NIS_radar_ << std::endl;
-	myRadarFile.close();
+	myRadarFile.close();*/
 }
 
