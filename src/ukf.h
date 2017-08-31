@@ -100,10 +100,6 @@ public:
   //Declare vector for incoming radar measurements
   VectorXd z_radar_;
 
-  //Declare a vector to store NIS readings for radar
-  std::vector<double> NIS_vector_radar_;
-  //double NIS_radar_;
-
   ///* Declare variables for LIDAR
   //Measurement matrix H for LIDAR
   MatrixXd H_;
@@ -117,8 +113,6 @@ public:
   //Declare measurement dimension for radar
   int n_z_laser_;
 
-  //Declare a vector to store NIS readings for radar
-  std::vector<double> NIS_vector_laser_;
 
   /**
    * Constructor
